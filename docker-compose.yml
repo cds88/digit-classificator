@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules      
+    depends_on:
+      - api
+    environment:
+      - REACT_APP_API_URL=http://localhost:5013
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - NODE_ENV=development      
+    command: ["yarn", "start"]
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "5013:5013"
+    depends_on:
+      - ai
+    environment:
+      - FLASK_API_URL=http://ai:8000
+    volumes:
+      - ./api:/app
+      - /app/obj/
+      - /app/bin/
+    command:  ["dotnet", "watch", "run", "--non-interactive", "--project", "api.csproj", "--urls", "http://0.0.0.0:5013"]
+
+  ai:
+    build:
+      context: ./ai
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./ai:/app
+    command: ["python", "app.py"]
+
+networks:
+  default:
+    name: app_network
