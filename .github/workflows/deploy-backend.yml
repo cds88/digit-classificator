@@ -33,10 +33,10 @@ jobs:
 
     - name: Send files
       run: | 
-        rsync -avz --no-times --no-perms --no-group -e "ssh -i key.pem -o StrictHostKeyChecking=no" ./ai ${{ secrets.SSH_USER }}@${{ secrets.SSH_REMOTE_IP }}:${{ secrets.SSH_BACKEND_REMOTE_PATH }} -p ${{ secrets.SSH_PORT }}
-        rsync -avz --no-times --no-perms --no-group -e "ssh -i key.pem -o StrictHostKeyChecking=no" ./api ${{ secrets.SSH_USER }}@${{ secrets.SSH_REMOTE_IP }}:${{ secrets.SSH_BACKEND_REMOTE_PATH }} -p ${{ secrets.SSH_PORT }}
+        rsync -avz --no-times --no-perms --no-group -e "ssh -i key.pem -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }}" ./ai ${{ secrets.SSH_USER }}@${{ secrets.SSH_REMOTE_IP }}:${{ secrets.SSH_BACKEND_REMOTE_PATH }} 
+        rsync -avz --no-times --no-perms --no-group -e "ssh -i key.pem -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }}" ./api ${{ secrets.SSH_USER }}@${{ secrets.SSH_REMOTE_IP }}:${{ secrets.SSH_BACKEND_REMOTE_PATH }}
         
-        rsync -avz --no-times --no-perms --no-group -e "ssh -i key.pem -o StrictHostKeyChecking=no" ./docker-compose.prod.yml ${{ secrets.SSH_USER }}@${{ secrets.SSH_REMOTE_IP }}:${{ secrets.SSH_BACKEND_REMOTE_PATH }} -p ${{ secrets.SSH_PORT }}
+        rsync -avz --no-times --no-perms --no-group -e "ssh -i key.pem -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }}" ./docker-compose.prod.yml ${{ secrets.SSH_USER }}@${{ secrets.SSH_REMOTE_IP }}:${{ secrets.SSH_BACKEND_REMOTE_PATH }}
     
     - name: Deploy application
       run: |
