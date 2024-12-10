@@ -35,7 +35,7 @@ jobs:
         working-directory: ./frontend
         run: yarn install
 
-      # Build the frontend project
+      # Build the frontend projectqq
       - name: Build frontend
         working-directory: ./frontend
         run: yarn build
