@@ -23,7 +23,7 @@ jobs:
 
     # Build and Test locally (optional, to ensure build correctness before deployment)
     - name: Build and Test Locally
-      working-directory: ./backend
+      working-directory: ./api
       run: |
         dotnet restore
         dotnet build --configuration Release
@@ -42,7 +42,8 @@ jobs:
 
     - name: Send files
       run: | 
-        rsync -avz --no-times --no-perms --no-group -e "ssh -i key.pem -o StrictHostKeyChecking=no" ./backend ${{ secrets.SSH_USER }}@${{ secrets.SSH_REMOTE_IP }}:${{ secrets.SSH_BACKEND_REMOTE_PATH }} -p ${{ secrets.SSH_PORT }}
+        rsync -avz --no-times --no-perms --no-group -e "ssh -i key.pem -o StrictHostKeyChecking=no" ./ai ./api ${{ secrets.SSH_USER }}@${{ secrets.SSH_REMOTE_IP }}:${{ secrets.SSH_BACKEND_REMOTE_PATH }} -p ${{ secrets.SSH_PORT }}
+        
         rsync -avz --no-times --no-perms --no-group -e "ssh -i key.pem -o StrictHostKeyChecking=no" ./docker-compose.prod.yml ${{ secrets.SSH_USER }}@${{ secrets.SSH_REMOTE_IP }}:${{ secrets.SSH_BACKEND_REMOTE_PATH }} -p ${{ secrets.SSH_PORT }}
     
     - name: Deploy application
