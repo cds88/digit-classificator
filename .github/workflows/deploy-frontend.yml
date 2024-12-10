@@ -1,0 +1,65 @@
+name: Build and Deploy Frontend
+
+on:
+  push:
+    branches:
+      - frontend  # Specify the branch that triggers the action (change this to match your setup)
+      - production
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+
+      - name: Use Node.js version from .nvmrc
+        id: node_version
+        working-directory: ./frontend
+        run: |
+          NODE_VERSION=$(cat .nvmrc)
+          echo "Using Node.js version $NODE_VERSION"
+          echo "NODE_VERSION=${NODE_VERSION}" >> $GITHUB_ENV        
+
+
+      # Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install root dependencies 
+        working-directory: ./frontend
+        run: yarn install
+
+      # Build the frontend project
+      - name: Build frontend
+        working-directory: ./frontend
+        run: yarn build
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan ${{ secrets.SSH_REMOTE_IP }} >> ~/.ssh/known_hosts        
+
+      - name: Install rsync
+        run: sudo apt-get install -y rsync         
+
+      # Deploy built files to remote server using rsync q
+      - name: Deploy via rsync
+        env:
+          SSH_REMOTE_IP: ${{ secrets.SSH_REMOTE_IP }}  # Define your server IP in GitHub secrets
+          SSH_USER: ${{ secrets.SSH_USER }}  # Define your SSH username in GitHub secrets
+          SSH_SITE_REMOTE_PATH: ${{ secrets.SSH_SITE_REMOTE_PATH }}  # Define the destination path on the server
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}  # Add your private SSH key as a GitHub secret
+
+        run: |
+          rsync -avz --no-times --no-perms --no-group -e "ssh -o StrictHostKeyChecking=no" ./frontend/dist/ ${SSH_USER}@${SSH_REMOTE_IP}:${SSH_SITE_REMOTE_PATH}
+
+      - name: Cleanup SSH Keys
+        run: shred -u ~/.ssh/id_rsa
