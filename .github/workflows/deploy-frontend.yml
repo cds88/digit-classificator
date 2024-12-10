@@ -45,7 +45,7 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan ${{ secrets.SSH_REMOTE_IP }} >> ~/.ssh/known_hosts        
+          ssh-keyscan  -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_REMOTE_IP }} >> ~/.ssh/known_hosts        
 
       - name: Install rsync
         run: sudo apt-get install -y rsync         
@@ -57,9 +57,10 @@ jobs:
           SSH_USER: ${{ secrets.SSH_USER }}  # Define your SSH username in GitHub secrets
           SSH_SITE_REMOTE_PATH: ${{ secrets.SSH_SITE_REMOTE_PATH }}  # Define the destination path on the server
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}  # Add your private SSH key as a GitHub secret
+          SSH_PORT: ${{ secrets.SSH_PORT}}
 
         run: |
-          rsync -avz --no-times --no-perms --no-group -e "ssh -o StrictHostKeyChecking=no" ./frontend/dist/ ${SSH_USER}@${SSH_REMOTE_IP}:${SSH_SITE_REMOTE_PATH}
+          rsync -avz --no-times --no-perms --no-group -e "ssh -o StrictHostKeyChecking=no -p {SSH_PORT}" ./frontend/dist/ ${SSH_USER}@${SSH_REMOTE_IP}:${SSH_SITE_REMOTE_PATH}
 
       - name: Cleanup SSH Keys
         run: shred -u ~/.ssh/id_rsa
