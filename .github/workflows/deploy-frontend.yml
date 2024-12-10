@@ -5,6 +5,7 @@ on:
     branches:
       - frontend  # Specify the branch that triggers the action (change this to match your setup)
       - production
+      - master
 
 jobs:
   build-deploy:
