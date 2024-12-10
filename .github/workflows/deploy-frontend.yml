@@ -61,7 +61,7 @@ jobs:
           SSH_PORT: ${{ secrets.SSH_PORT }}
 
         run: |
-          rsync -avz --no-times --no-perms --no-group -e "ssh -p {SSH_PORT} -o StrictHostKeyChecking=no" ./frontend/dist/ ${SSH_USER}@${SSH_REMOTE_IP}:${SSH_SITE_REMOTE_PATH}
+          rsync -avz --no-times --no-perms --no-group -e "ssh -p ${SSH_PORT} -o StrictHostKeyChecking=no" ./frontend/dist/ ${SSH_USER}@${SSH_REMOTE_IP}:${SSH_SITE_REMOTE_PATH}
 
       - name: Cleanup SSH Keys
         run: shred -u ~/.ssh/id_rsa
