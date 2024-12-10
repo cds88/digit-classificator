@@ -3,7 +3,7 @@ version: "3.8"
 services:
   api:
     build:
-      context: backend
+      context: api
       dockerfile: Dockerfile.prod
     ports:
       - "5014:5013"
