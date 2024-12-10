@@ -40,7 +40,7 @@ jobs:
     
     - name: Deploy application
       run: |
-        ssh -i key.pem -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER}}@${{secrets.SSH_REMOTE_IP}} << 'EOF'
+        ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER}}@${{secrets.SSH_REMOTE_IP}} << 'EOF'
         cd ${{ secrets.SSH_BACKEND_REMOTE_PATH}}
         docker-compose down -v || true
         docker-compose -f ./docker-compose.prod.yml build
