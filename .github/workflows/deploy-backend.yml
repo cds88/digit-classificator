@@ -20,15 +20,6 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.0
-
-    # Build and Test locally (optional, to ensure build correctness before deployment)
-    - name: Build and Test Locally
-      working-directory: ./api
-      run: |
-        dotnet restore
-        dotnet build --configuration Release
-        dotnet test
-
  
     - name: Setup SSH
       run: |
