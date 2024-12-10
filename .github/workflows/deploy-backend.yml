@@ -1,0 +1,59 @@
+name: Deploy to Remote Server
+
+on:
+  push:
+    branches:
+      - backend # Trigger deployment on pushes to the main branch
+      - production
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the code
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Set up .NET
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.0
+
+    # Build and Test locally (optional, to ensure build correctness before deployment)
+    - name: Build and Test Locally
+      working-directory: ./backend
+      run: |
+        dotnet restore
+        dotnet build --configuration Release
+        dotnet test
+
+ 
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan ${{ secrets.SSH_REMOTE_IP }} >> ~/.ssh/known_hosts      
+
+    - name: Install rsync
+      run: sudo apt-get install -y rsync   
+
+    - name: Send files
+      run: | 
+        rsync -avz --no-times --no-perms --no-group -e "ssh -i key.pem -o StrictHostKeyChecking=no" ./backend ${{ secrets.SSH_USER }}@${{ secrets.SSH_REMOTE_IP }}:${{ secrets.SSH_BACKEND_REMOTE_PATH }} -p ${{ secrets.SSH_PORT }}
+        rsync -avz --no-times --no-perms --no-group -e "ssh -i key.pem -o StrictHostKeyChecking=no" ./docker-compose.prod.yml ${{ secrets.SSH_USER }}@${{ secrets.SSH_REMOTE_IP }}:${{ secrets.SSH_BACKEND_REMOTE_PATH }} -p ${{ secrets.SSH_PORT }}
+    
+    - name: Deploy application
+      run: |
+        ssh -i key.pem -o StrictHostKeyChecking=no ${{ secrets.SSH_USER}}@${{secrets.SSH_REMOTE_IP}} << 'EOF'
+        cd ${{ secrets.SSH_BACKEND_REMOTE_PATH}}
+        docker-compose down -v || true
+        docker-compose -f ./docker-compose.prod.yml build
+        docker-compose -f ./docker-compose.prod.yml up -d 
+
+     
+
+
+ 

@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: backend
+      dockerfile: Dockerfile.prod
+    ports:
+      - "5014:5013"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    restart: unless-stopped
+    networks:
+      - default_digit_classifier_network  
+  ai:
+    networks:
+      - default_digit_classifier_network
+    build:
+      context: ai
+      dockerfile: Dockerfile
+    ports: 
+      - "8099:8000"
+
+networks:
+  default_digit_classifier_network:
+    name: digit_classifier_network
+    
