@@ -3,7 +3,7 @@ name: Deploy to Remote Server
 on:
   push:
     branches:
-      - backend # Trigger deployment on pushes to the main branch
+      - backend # Trigger deployment on pushes to the main branc
       - production
 
 jobs:
