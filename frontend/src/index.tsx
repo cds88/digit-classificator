@@ -1,27 +1,19 @@
-import {createRoot} from 'react-dom/client'
-import ReactDOM from 'react-dom'
-import App from './App'
- 
+import { createRoot } from "react-dom/client";
+import ReactDOM from "react-dom";
+import App from "./App";
+import { ToastContainer } from "react-toastify";
 
+const rootDom = document.getElementById("root");
 
-const rootDom = document.getElementById("root")
+const root = createRoot(rootDom, {
+  onUncaughtError(error, errorInfo) {
+    console.log("unCaughtError");
+    console.log(error);
+    console.log(errorInfo);
+  },
+  onCaughtError(error, errorInfo) {
+    console.log("caught error ");
+  },
+});
 
-
-
-const root = createRoot(rootDom, { onUncaughtError(error, errorInfo) {
-    console.log("unCaughtError")
-    console.log(error)
-    console.log(errorInfo)
-}, onCaughtError(error, errorInfo) {
-    console.log("caught error ")
-},})
-
-root.render(<App/>)
-
-
-
-
-
-
-
-
+root.render(<><App /> <ToastContainer theme={"dark"}/>{" "}</>);
