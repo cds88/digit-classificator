@@ -1,25 +1,38 @@
 version: "3.8"
 
 services:
-  api:
+  frontend:
     build:
-      context: api
+      context: ./frontend
       dockerfile: Dockerfile.prod
     ports:
-      - "5014:5013"
+      - "3019:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://api:5013
+      
+    networks:
+      - default_digit_classifier_network
+    
+  api:
+    build:
+      context: ./ai.backend/ai.backend.api
+      dockerfile: Dockerfile.prod
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
+      - FLASK_API_URL=http://ai:8000
     restart: unless-stopped
     networks:
       - default_digit_classifier_network  
   ai:
-    networks:
-      - default_digit_classifier_network
     build:
       context: ai
-      dockerfile: Dockerfile
-    ports: 
-      - "8099:8000"
+      dockerfile: Dockerfile  
+    networks:
+      - default_digit_classifier_network
+    environment:
+      - FLASK_RUN_PORT=8000      
+
+
 
 networks:
   default_digit_classifier_network:

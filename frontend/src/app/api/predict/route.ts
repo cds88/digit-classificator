@@ -1,18 +1,21 @@
 import axios from "axios";
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(
+  req: Request
+) {
+  try {
+    const body = await req.json();
+    const URL = `${process.env.NEXT_PUBLIC_API_URL}/api/predict/`;
 
-    try {
-        const body = await req.json();
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/predict`,body)
+    const response = await axios.post(URL, body);
 
-        console.log("response is ", response.data )
-
-        return NextResponse.json({test:123})
-    } catch (error) {
-        console.log("error is ", error)
-        return NextResponse.json({error:"An unexpected error occured"},{status: 500})
-    }
-  
+    return NextResponse.json(response.data);
+  } catch (error) {
+    console.log("error is ", error);
+    return NextResponse.json(
+      { error: "An unexpected error occured" },
+      { status: 500 }
+    );
   }
+}

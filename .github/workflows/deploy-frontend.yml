@@ -3,9 +3,7 @@ name: Build and Deploy Frontend
 on:
   push:
     branches:
-      - frontend  # Specify the branch that triggers the action (change this to match your setup)
-      - production
-      - master
+      - test-branch
 
 jobs:
   build-deploy:

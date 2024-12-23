@@ -15,7 +15,10 @@ public class PredictController : ControllerBase
         _httpClient = httpClientFactory.CreateClient();
     }
 
-
+    [HttpGet]
+    public  String Test(){
+        return "aaq1qweqweqwe";
+    }
  
 
     [HttpPost]

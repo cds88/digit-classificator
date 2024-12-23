@@ -17,14 +17,14 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
       - NODE_ENV=development      
-    #command: ["yarn", "start"]
-
+    networks:
+      - app_network
+      
   api:
     build:
       context: ./ai.backend/ai.backend.api
       dockerfile: Dockerfile
-    ports:
-      - "5013:5013"
+
     depends_on:
       - ai
     environment:
@@ -33,18 +33,20 @@ services:
       - ./ai.backend:/app
       - /app/obj/
       - /app/bin/
-    #command:  ["dotnet", "watch", "run", "--non-interactive", "--project", "api.csproj", "--urls", "http://0.0.0.0:5013"]
-
+    networks:
+      - app_network      
   ai:
     build:
       context: ./ai
       dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
+    environment:
+      - FLASK_RUN_PORT=8000
     volumes:
       - ./ai:/app
+    networks:
+      - app_network        
     command: ["python", "app.py"]
 
 networks:
-  default:
+  app_network:
     name: app_network

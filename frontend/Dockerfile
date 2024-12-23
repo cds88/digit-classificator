@@ -2,8 +2,8 @@ FROM node:20
 
 WORKDIR /app
 
-COPY package.json ./
-COPY yarn.lock ./
+COPY package.json yarn.lock ./
+
 
 RUN yarn 
 

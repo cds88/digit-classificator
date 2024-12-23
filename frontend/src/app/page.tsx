@@ -45,13 +45,12 @@ const Button = styled.button`
 
   &:hover {
     background-color: #ddd;
-    color:black;
+    color: black;
   }
 
   &:active {
     background-color: #bbb;
-    color:black;
-
+    color: black;
   }
 
   &:first-child {
@@ -65,8 +64,7 @@ const Button = styled.button`
   &:focus {
     outline: none;
     background-color: #eee;
-    color:black;
-
+    color: black;
   }
 `;
 
@@ -83,23 +81,16 @@ export default function Home() {
   const canvasRef = useRef<CanvasDraw>(null);
   const [isDrawing, setIsDrawing] = useState(false);
 
-  useEffect(()=>{
-    axios.get('/api/predict/').then(e=>{
-      console.log(e)
-    }).catch(console.error)
-  },[])
- 
-  
   const sendDrawing = async () => {
     if (!canvasRef.current) return;
-    //const canvas = canvasRef.current.canvasContainer.children[1]; // Access the drawing layer
+    
 
-    // Get the full-size image from the canvas
+    
 
-    // const fullImage =  canvasRef.current.getDataUrl("image/png");
-    const canvasElement = (canvasRef.current as any).canvas.drawing; // Casting to `any` to bypass type restrictions
+    
+    const canvasElement = (canvasRef.current as any).canvas.drawing; 
     const fullImage = canvasElement.toDataURL("image/png");
-    // Create an offscreen canvas for resizing
+    
     const offscreenCanvas = document.createElement("canvas");
     offscreenCanvas.width = 28;
     offscreenCanvas.height = 28;
@@ -108,40 +99,35 @@ export default function Home() {
 
     if (!offscreenContext) return;
 
-    // Draw the full-size image onto the smaller canvas
+    
     const img = new Image();
     img.onload = async () => {
-      offscreenContext.fillStyle = "#000000"; // White background
+      offscreenContext.fillStyle = "#000000"; 
       offscreenContext.fillRect(0, 0, 28, 28);
       offscreenContext.drawImage(img, 0, 0, 28, 28);
 
-      // Get the resized image as base64
+      
       const resizedImage = offscreenCanvas.toDataURL("image/png");
 
       try {
-        const response = await axios.post(
-          `/api/predict`,
-          {
-            Image: resizedImage,  
-          }
-        );
-        // const responseJson = JSON.parse(response.data.prediction);
-        // const result = responseJson.prediction;
-        // console.log(`Predicted Letter: ${response.data.prediction}`);
-        // console.log(JSON.parse(response.data.prediction));
-        // toast.success(`Predicted number: ${result}`);
+        const response = await axios.post(`/api/predict`, {
+          Image: resizedImage,
+        });
+
+        const result = response.data.prediction;
+        console.log(`Predicted Letter: ${response.data.prediction}`);
+
+        toast.success(`Predicted number: ${result}`);
       } catch (error) {
         console.error("Error predicting letter:", error);
       }
     };
-    img.src = fullImage; // Load the full-size image into the offscreen canvas
+    img.src = fullImage; 
   };
 
   const clearCanvas = () => {
     canvasRef.current?.clear();
   };
-
- 
 
   return (
     <MasterWrapper>
@@ -149,19 +135,17 @@ export default function Home() {
         <TitleWrapper>
           <h1>Draw a Letter</h1>
         </TitleWrapper>
-        <div 
-          onMouseEnter={()=>{
-            setIsDrawing(true)
+        <div
+          onMouseEnter={() => {
+            setIsDrawing(true);
           }}
-          onMouseLeave={()=>{
-            setIsDrawing(false)
+          onMouseLeave={() => {
+            setIsDrawing(false);
           }}
-   
         >
           <CanvasDraw
-
             ref={canvasRef}
-            brushColor={ isDrawing? "#fff"  :'transparent'}
+            brushColor={isDrawing ? "#fff" : "transparent"}
             canvasWidth={700}
             brushRadius={33}
             canvasHeight={700}
