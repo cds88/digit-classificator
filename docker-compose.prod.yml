@@ -5,6 +5,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
+    image: frontend:latest
     ports:
       - "3019:3000"
     environment:
@@ -17,6 +18,7 @@ services:
     build:
       context: ./ai.backend/ai.backend.api
       dockerfile: Dockerfile.prod
+    image: api:latest
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - FLASK_API_URL=http://ai:8000
@@ -27,6 +29,7 @@ services:
     build:
       context: ai
       dockerfile: Dockerfile  
+    image: ai:latest
     networks:
       - default_digit_classifier_network
     environment:

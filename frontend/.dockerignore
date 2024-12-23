@@ -1,0 +1,7 @@
+node_modules
+*.log
+*.node_modules
+.git
+.dockerignore
+.next/cache
+tests

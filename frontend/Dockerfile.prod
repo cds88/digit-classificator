@@ -1,21 +1,19 @@
-FROM node:20 AS builder
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
 COPY package.json yarn.lock ./
 
-RUN yarn install --frozen-lockfile --production
+RUN yarn install --frozen-lockfile --production=true
 
 COPY . .
 RUN yarn build
 
-FROM node:20-slim AS runner
+FROM node:20-alpine AS runner
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    passwd \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN useradd --create-home --shell /bin/bash nextjs
+RUN apk add --no-cache shadow && \
+    useradd --create-home --shell /bin/bash nextjs && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -24,8 +22,8 @@ COPY --from=builder /app/public /app/public
 COPY --from=builder /app/package.json /app/package.json
 COPY --from=builder /app/node_modules /app/node_modules
 
-RUN yarn global add pm2
-RUN chown -R nextjs:nextjs /app
+RUN yarn global add pm2 && \
+    chown -R nextjs:nextjs /app
 
 USER nextjs
 EXPOSE 3000
