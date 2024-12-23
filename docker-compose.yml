@@ -13,15 +13,15 @@ services:
     depends_on:
       - api
     environment:
-      - REACT_APP_API_URL=http://localhost:5013
+      - NEXT_PUBLIC_API_URL=http://api:5013
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
       - NODE_ENV=development      
-    command: ["yarn", "start"]
+    #command: ["yarn", "start"]
 
   api:
     build:
-      context: ./api
+      context: ./ai.backend/ai.backend.api
       dockerfile: Dockerfile
     ports:
       - "5013:5013"
@@ -30,10 +30,10 @@ services:
     environment:
       - FLASK_API_URL=http://ai:8000
     volumes:
-      - ./api:/app
+      - ./ai.backend:/app
       - /app/obj/
       - /app/bin/
-    command:  ["dotnet", "watch", "run", "--non-interactive", "--project", "api.csproj", "--urls", "http://0.0.0.0:5013"]
+    #command:  ["dotnet", "watch", "run", "--non-interactive", "--project", "api.csproj", "--urls", "http://0.0.0.0:5013"]
 
   ai:
     build:

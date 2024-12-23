@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ai.backend.api", "ai.backend.api\ai.backend.api.csproj", "{18A7F31A-74A7-4667-BC67-C5E901C25784}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ai.backend.models", "ai.backend.models\ai.backend.models.csproj", "{618FD6FC-8F7E-4100-936F-1E847A454C37}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{18A7F31A-74A7-4667-BC67-C5E901C25784}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18A7F31A-74A7-4667-BC67-C5E901C25784}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18A7F31A-74A7-4667-BC67-C5E901C25784}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18A7F31A-74A7-4667-BC67-C5E901C25784}.Release|Any CPU.Build.0 = Release|Any CPU
+		{618FD6FC-8F7E-4100-936F-1E847A454C37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{618FD6FC-8F7E-4100-936F-1E847A454C37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{618FD6FC-8F7E-4100-936F-1E847A454C37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{618FD6FC-8F7E-4100-936F-1E847A454C37}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
