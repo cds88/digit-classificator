@@ -41,18 +41,18 @@ jobs:
           run: sudo apt-get install -y rsync
         - name: Deploy via rsync
           run: |
-            rsync -avz --no-times --no-perms --no-group -e "ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no" frontend.tar api.tar ai.tar docker-compose.prod.yml ${{secrets.SSH_USER}}@${{secrets.SSH_REMOTE_IP}}:${{secrets.SSH_BACKEND_REMOTE_PATH}}
+            rsync -avz --no-times --no-perms --no-group -e "ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no" frontend.tar api.tar ai.tar docker-compose.deploy.yml ${{secrets.SSH_USER}}@${{secrets.SSH_REMOTE_IP}}:${{secrets.SSH_BACKEND_REMOTE_PATH}}
 
         - name: Deploy container
           run: |
             ssh -o StrictHostKeyChecking=no -p ${{secrets.SSH_PORT}} ${{secrets.SSH_USER}}@${{secrets.SSH_REMOTE_IP}} << 'EOF'
             cd ${{secrets.SSH_BACKEND_REMOTE_PATH}}
-            docker-compose down -v || true
+            docker-compose -f docker-compose.deploy.yml down -v || true
             docker load -i frontend.tar
             docker load -i api.tar
             docker load -i ai.tar
             rm -f frontend.tar api.tar ai.tar
-            docker-compose -f docker-compose.prod.yml up -d 
+            docker-compose -f docker-compose.deploy.yml up -d 
             docker system prune -f 
 
 
