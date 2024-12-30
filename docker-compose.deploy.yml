@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   frontend:
-    image: frontend:latest  # Use the pre-loaded image
+    image: frontend:latest  
     ports:
       - "3019:3000"
     environment:
@@ -11,7 +11,7 @@ services:
       - default_digit_classifier_network
 
   api:
-    image: api:latest  # Use the pre-loaded image
+    image: api:latest  
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - FLASK_API_URL=http://ai:8000
@@ -20,7 +20,7 @@ services:
       - default_digit_classifier_network
 
   ai:
-    image: ai:latest  # Use the pre-loaded image
+    image: ai:latest  
     environment:
       - FLASK_RUN_PORT=8000
     networks:
